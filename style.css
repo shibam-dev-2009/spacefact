@@ -1,5 +1,6 @@
 h1{
     font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
 }
 .spinner {
   border: 6px solid #f3f3f3;
@@ -25,8 +26,14 @@ button{
 input{
     padding: 20px 10px;
     border-radius: 10px;
+    align-self: center;
 }
 img{
     margin: 20px;
     border-radius: 10px;
+}
+.all{
+    text-align: center;
+    width: 100vw;
+    height: auto;
 }
