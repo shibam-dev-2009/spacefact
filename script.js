@@ -1,35 +1,17 @@
-document.getElementById("call").addEventListener("click", () => {
-    let inp = document.getElementById("earth");
-    let objectName = inp.value.trim().toLowerCase();
-
-    if (objectName) {
-        fetchFactForObject(objectName);
-    } else {
-        document.getElementById("factDisplay").innerText = "Please enter a celestial object name.";
-    }
-});
-
-async function fetchFactForObject(objectName) {
+async function fetchPlanetImage(planet) {
     try {
-        const url = `https://api.bootprint.space/fact/${objectName}`;
-        const response = await fetch(url);
-
-        // If not OK (like 404), show error
-        if (!response.ok) {
-            throw new Error(`No fact found for "${objectName}".`);
-        }
-
+        const response = await fetch(`https://images-api.nasa.gov/search?q=${planet}&media_type=image`);
         const data = await response.json();
+        const imgUrl = data.collection.items[0]?.links[0]?.href;
 
-        // Extra safety check
-        if (data.fact && data.object) {
-            document.getElementById("factDisplay").innerText =
-                `Fact about ${data.object}: ${data.fact}`;
+        if (imgUrl) {
+            document.getElementById("planetImage").src = imgUrl;
+            document.getElementById("planetImage").style.display = "block";
         } else {
-            throw new Error("Invalid response format.");
+            document.getElementById("planetImage").style.display = "none";
+            alert("No image found.");
         }
-    } catch (error) {
-        console.error("Error fetching the fact:", error);
-        document.getElementById("factDisplay").innerText = error.message;
+    } catch (err) {
+        console.error(err);
     }
 }
