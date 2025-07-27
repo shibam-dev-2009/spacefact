@@ -1,17 +1,45 @@
-async function fetchPlanetImage(planet) {
-    try {
-        const response = await fetch(`https://images-api.nasa.gov/search?q=${planet}&media_type=image`);
-        const data = await response.json();
-        const imgUrl = data.collection.items[0]?.links[0]?.href;
+document.getElementById("call").addEventListener("click", () => {
+    const objectName = document.getElementById("earth").value.trim().toLowerCase();
+    if (objectName) {
+        showPlanetImage(objectName);
+    } else {
+        document.getElementById("planetImage").style.display = "none";
+        alert("Please enter a celestial object name.");
+    }
+});
 
-        if (imgUrl) {
-            document.getElementById("planetImage").src = imgUrl;
-            document.getElementById("planetImage").style.display = "block";
+async function showPlanetImage(objectName) {
+    const loader = document.getElementById("loader");
+    const imgElement = document.getElementById("planetImage");
+
+    // Show spinner, hide image
+    loader.style.display = "block";
+    imgElement.style.display = "none";
+
+    try {
+        const response = await fetch(`https://api.bootprint.space/img/${objectName}`);
+        const data = await response.json();
+
+        if (data.image) {
+            imgElement.src = data.image;
+
+            // Wait for image to fully load
+            imgElement.onload = () => {
+                loader.style.display = "none";
+                imgElement.style.display = "block";
+            };
+
+            // In case image fails to load
+            imgElement.onerror = () => {
+                loader.style.display = "none";
+                alert("Image failed to load.");
+            };
         } else {
-            document.getElementById("planetImage").style.display = "none";
-            alert("No image found.");
+            throw new Error("No image found.");
         }
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        console.error("Error:", error);
+        loader.style.display = "none";
+        alert("Failed to load image. Please check the object name.");
     }
 }
