@@ -1,7 +1,7 @@
 
 document.getElementById("call").addEventListener("click", () => {
-    let inp = document.getElementById("earth");
-    let objectName = inp.value.trim().toLowerCase(); // normalize input
+    let inp = document.getElementById("input");
+    let objectName = inp.value.toLowerCase(); // normalize input
 
     if (objectName) {
         fetchFactForObject(objectName);
